@@ -11,7 +11,7 @@ export default class Bubbles extends Component {
     color: PropTypes.string,
     spaceBetween: PropTypes.number
   };
-
+  mounted = false;
   static defaultProps = {
     spaceBetween: 6,
     size: 11,
@@ -27,6 +27,7 @@ export default class Bubbles extends Component {
   };
 
   componentDidMount() {
+    this.mounted = true;
     this.state.circles.forEach((val, index) => {
       const timer = setTimeout(() => this.animate(index), index * 300);
       this.timers.push(timer);
@@ -34,6 +35,7 @@ export default class Bubbles extends Component {
   }
 
   componentWillUnmount() {
+    this.mounted = false;
     this.timers.forEach((timer) => {
       clearTimeout(timer);
     });
@@ -44,6 +46,9 @@ export default class Bubbles extends Component {
   timers = [];
 
   animate(index) {
+    if(!this.mounted) {
+      return;
+    }
     Animated
       .sequence([
         Animated.timing(this.state.circles[index], {
@@ -58,7 +63,7 @@ export default class Bubbles extends Component {
         })
       ])
       .start(() => {
-        if (!this.unmounted) {
+        if (this.mounted) {
           this.animate(index);
         }
       });
