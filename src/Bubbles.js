@@ -68,21 +68,25 @@ export default class Bubbles extends Component {
         }
       });
   }
-
+  circles = [];
   renderBubble(index) {
     const { size, spaceBetween, color } = this.props;
+    if (this.circles[index]) {
+      return this.circles[index];
+    }
     const scale = this.state.circles[index];
     const offset = {
       x: size + index * (size * 2 + spaceBetween),
       y: size
     };
-
-    return (<Circle
+    const circle = <Circle
       fill={color}
       radius={size}
       scale={scale}
       {...offset}
-    />);
+    />;
+    this.circles[index] = circle;
+    return circle;
   }
 
   render() {
